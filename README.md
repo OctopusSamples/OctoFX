@@ -35,8 +35,8 @@ The application consists of four major components:
 
  - **Trading Website**  
    A customer-facing ASP.NET MVC website, where customers trade currencies. Customers can register, login, manage their beneficiary account details, get quotes, and book deals. 
- - **Rate Service**
-   A .NET Windows Service that simulates providing real-time FX rates for all of the currency pairs. Every 5 minutes it checks the market rate, subtracts the basis points that are the profit for OctoFX, and generates a new rate for each currency pair. 
+ - **Dealer Portal**
+   An ASP.NET MVC website used by the dealers to adjust the rates offered to customers. 
  - **Deal Settlement Service**
    A .NET Windows Service that simulates the bank reconcilation and settlement process. It checks whether the OctoFX clearing accounts have received funds for any pending deals, and then initiates the transfer when deals are ready to be settled.
 
