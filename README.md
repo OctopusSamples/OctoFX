@@ -15,7 +15,7 @@ The system gets the current exchange rate for the **currency pair** (USD/GBP) an
 
  * Sell: **1000 USD**
  * Buy: **629.25 GBP**
- * Expires: *<expiry time>*
+ * Expires: *[expiry time]*
 
 Behind the scenes, an army of **dealers** working for OctoFX are busily trading currency pairs when they see good rates. While the market rate offerred for an given currency pair is always changing, the rates offered to OctoFX customers are determined by the dealers (who make their profit by taking a few basis points for themselves), so the rates used for quotes change only every 5 minutes or so. The quote is therefore valid for only a few minutes. 
 
@@ -23,9 +23,9 @@ If the customer is happy with the quote, and if the quote hasn't expired, they c
 
  * Customer sells: **1000 USD**
  * Customer buys: **629.25 GBP**
- * Entered: *<date/time>*
+ * Entered: *[date/time]*
  * Status: *Awaiting funds*
- * Nominated beneficiary: *<bank account details>*
+ * Nominated beneficiary: *[bank account details]*
 
 At this stage, the customer has committed to a deal, but no money has changed hands. The deal has a status of *Awaiting funds*. The customer has to first transfer 1000 USD to a USD bank account held by OctoFX (we call them **clearing accounts**). When OctoFX receives the funds, the GBP is then deposited to the nominated account on the deal, and the deal has a status of **Settled**. 
 
