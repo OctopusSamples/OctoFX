@@ -35,6 +35,9 @@
     <Reference Include="Autofac">
       <HintPath>..\packages\Autofac.3.1.5\lib\net40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="DbUp">
+      <HintPath>..\packages\dbup.3.0.6\lib\NET35\DbUp.dll</HintPath>
+    </Reference>
     <Reference Include="FluentNHibernate">
       <HintPath>..\packages\FluentNHibernate.1.3.0.733\lib\FluentNHibernate.dll</HintPath>
     </Reference>
@@ -61,7 +64,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\Script0001 - Initial tables.sql" />
+    <EmbeddedResource Include="Scripts\Script0001 - Initial tables.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OctoFX.Core\OctoFX.Core.csproj">
+      <Project>{9316AE68-1295-4A98-9C84-DCF136B9F10B}</Project>
+      <Name>OctoFX.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\Script0002 - Seed data.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

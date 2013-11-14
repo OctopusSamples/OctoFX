@@ -8,11 +8,13 @@ namespace OctoFX.Tests.OctoFX.Core.Model
     public class CurrencyPairTests
     {
         [Test]
-        public void ShouldBeEqualNoMatterTheOrder()
+        public void ShouldBeUnequalWhenOrderOfCurrenciesChanges()
         {
             var pair1 = new CurrencyPair(Currency.Aud, Currency.Usd);
-            var pair2 = new CurrencyPair(Currency.Usd, Currency.Aud);
+            var pair2 = new CurrencyPair(Currency.Aud, Currency.Usd);
+            var pair3 = new CurrencyPair(Currency.Usd, Currency.Aud);
             Assert.AreEqual(pair1, pair2);
+            Assert.AreNotEqual(pair2, pair3);
         }
 
         [Test]
@@ -30,7 +32,7 @@ namespace OctoFX.Tests.OctoFX.Core.Model
         }
 
         [Test]
-        [TestCase("USD", "AUD", "AUD/USD")]
+        [TestCase("USD", "AUD", "USD/AUD")]
         [TestCase("AUD", "USD", "AUD/USD")]
         public void ShouldFormatNicely(string a, string b, string expected)
         {
@@ -38,14 +40,14 @@ namespace OctoFX.Tests.OctoFX.Core.Model
         }
 
         [Test]
-        [TestCase("USD/AUD", "AUD", "USD")]
-        [TestCase("AUD/GBP", "AUD", "GBP")]
         [TestCase("AUD/USD", "AUD", "USD")]
+        [TestCase("AUD/GBP", "AUD", "GBP")]
+        [TestCase("EUR/USD", "EUR", "USD")]
         public void ShouldParse(string pair, string a, string b)
         {
             var parsed = CurrencyPair.Parse(pair);
-            Assert.That(parsed.First, Is.EqualTo((Currency)a));
-            Assert.That(parsed.Second, Is.EqualTo((Currency)b));
+            Assert.That(parsed.Sell, Is.EqualTo((Currency)a));
+            Assert.That(parsed.Buy, Is.EqualTo((Currency)b));
         }
     }
 }

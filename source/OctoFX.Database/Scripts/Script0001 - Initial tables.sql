@@ -1,6 +1,4 @@
-﻿
-
-create table dbo.[Account]
+﻿create table dbo.[Account]
 (
 	Id int identity(1,1) not null constraint PK_Customer_Id primary key clustered,
 	Email nvarchar(255) not null constraint UQ_Customer_Email unique,
@@ -24,9 +22,8 @@ go
 
 create table dbo.[ExchangeRate]
 (
-	CurrencyPair varchar(7) not null,
-	BuyRate decimal(20,9) not null,
-	SellRate decimal(20,9) not null
+	SellBuyCurrencyPair varchar(7) not null constraint PK_ExchangeRate_Id primary key clustered,
+	Rate decimal(20,9) not null
 )
 go
 

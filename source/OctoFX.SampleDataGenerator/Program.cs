@@ -18,10 +18,6 @@ namespace OctoFX.SampleDataGenerator
 
             using (var session = factory.OpenSession())
             {
-                var rates = session.QueryOver<ExchangeRate>()
-                    .Where(m => m.CurrencyPair == new CurrencyPair(Currency.Aud, Currency.Gbp))
-                    .List();
-
                 //session.SaveOrUpdate(new ExchangeRate(new CurrencyPair(Currency.Usd, Currency.Gbp), 1.109m, 0.993m));
                 //session.SaveOrUpdate(new ExchangeRate(new CurrencyPair(Currency.Aud, Currency.Gbp), 1.109m, 0.993m));
                 //session.SaveOrUpdate(new ExchangeRate(new CurrencyPair(Currency.Aud, Currency.Eur), 1.109m, 0.993m));

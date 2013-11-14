@@ -4,37 +4,34 @@ namespace OctoFX.Core.Model
 {
     public class CurrencyPair : IEquatable<CurrencyPair>
     {
-        private readonly Currency first;
-        private readonly Currency second;
+        private readonly Currency sell;
+        private readonly Currency buy;
 
-        public CurrencyPair(Currency first, Currency second)
+        public CurrencyPair(Currency sell, Currency buy)
         {
-            if (first == null) throw new ArgumentNullException("first");
-            if (second == null) throw new ArgumentNullException("second");
-            if (first == second) throw new ArgumentException(string.Format("Cannot create a currency pair of: {0}/{1} because both currencies are the same", first, second));
+            if (sell == null) throw new ArgumentNullException("sell");
+            if (buy == null) throw new ArgumentNullException("buy");
+            if (sell == buy) throw new ArgumentException(string.Format("Cannot create a currency pair of: {0}/{1} because both currencies are the same", sell, buy));
 
-            var items = new[] {first, second};
-            Array.Sort(items);
-
-            this.first = items[0];
-            this.second = items[1];
+            this.sell = sell;
+            this.buy = buy;
         }
 
-        public Currency First
+        public Currency Sell
         {
-            get { return first; }
+            get { return sell; }
         }
 
-        public Currency Second
+        public Currency Buy
         {
-            get { return second; }
+            get { return buy; }
         }
 
         public bool Equals(CurrencyPair other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(first, other.first) && Equals(second, other.second);
+            return Equals(sell, other.sell) && Equals(buy, other.buy);
         }
 
         public override bool Equals(object obj)
@@ -49,7 +46,7 @@ namespace OctoFX.Core.Model
         {
             unchecked
             {
-                return ((first != null ? first.GetHashCode() : 0)*397) ^ (second != null ? second.GetHashCode() : 0);
+                return ((sell != null ? sell.GetHashCode() : 0)*397) ^ (buy != null ? buy.GetHashCode() : 0);
             }
         }
 
@@ -65,7 +62,7 @@ namespace OctoFX.Core.Model
 
         public override string ToString()
         {
-            return string.Format("{0}/{1}", first, second);
+            return string.Format("{0}/{1}", sell, buy);
         }
 
         public static CurrencyPair Parse(string pair)
