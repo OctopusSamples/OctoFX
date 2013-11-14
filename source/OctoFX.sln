@@ -1,8 +1,49 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.TradingWebsite", "OctoFX.TradingWebsite\OctoFX.TradingWebsite.csproj", "{41EBA3AE-66CE-4080-9457-626DCE0C5463}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.Database", "OctoFX.Database\OctoFX.Database.csproj", "{CDBECF97-8D93-4875-8258-CC41CF679C87}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.Core", "OctoFX.Core\OctoFX.Core.csproj", "{9316AE68-1295-4A98-9C84-DCF136B9F10B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.Tests", "OctoFX.Tests\OctoFX.Tests.csproj", "{6E77B735-90F7-41BE-B764-F5ACC39843C9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{96E3A881-064C-463F-8F9F-69CF10C4F0A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.SampleDataGenerator", "OctoFX.SampleDataGenerator\OctoFX.SampleDataGenerator.csproj", "{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{41EBA3AE-66CE-4080-9457-626DCE0C5463}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41EBA3AE-66CE-4080-9457-626DCE0C5463}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41EBA3AE-66CE-4080-9457-626DCE0C5463}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41EBA3AE-66CE-4080-9457-626DCE0C5463}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDBECF97-8D93-4875-8258-CC41CF679C87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDBECF97-8D93-4875-8258-CC41CF679C87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDBECF97-8D93-4875-8258-CC41CF679C87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDBECF97-8D93-4875-8258-CC41CF679C87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9316AE68-1295-4A98-9C84-DCF136B9F10B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9316AE68-1295-4A98-9C84-DCF136B9F10B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9316AE68-1295-4A98-9C84-DCF136B9F10B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9316AE68-1295-4A98-9C84-DCF136B9F10B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E77B735-90F7-41BE-B764-F5ACC39843C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E77B735-90F7-41BE-B764-F5ACC39843C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E77B735-90F7-41BE-B764-F5ACC39843C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E77B735-90F7-41BE-B764-F5ACC39843C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{19FDE2FD-5C49-4054-AD17-7E4CA45975C4} = {96E3A881-064C-463F-8F9F-69CF10C4F0A9}
 	EndGlobalSection
 EndGlobal
