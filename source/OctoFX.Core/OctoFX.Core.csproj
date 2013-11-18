@@ -57,6 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\BeneficiaryAccountMap.cs" />
+    <Compile Include="Model\Quote.cs" />
+    <Compile Include="Model\QuoteIntention.cs" />
+    <Compile Include="Model\QuoteMap.cs" />
     <Compile Include="PersistenceModule.cs" />
     <Compile Include="Model\AccountMap.cs" />
     <Compile Include="Model\BeneficiaryAccount.cs" />
@@ -71,6 +75,7 @@
     <Compile Include="Model\ExchangeRate.cs" />
     <Compile Include="Model\ExchangeRateMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\PasswordHasher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

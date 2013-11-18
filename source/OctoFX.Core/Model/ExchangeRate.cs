@@ -36,6 +36,16 @@
         public virtual CurrencyPair SellBuyCurrencyPair { get; protected set; }
         public virtual decimal Rate { get; protected set; }
 
+        public virtual decimal QuoteWhenIntendingToSell(decimal quantityToSell)
+        {
+            return Rate*quantityToSell;
+        }
+
+        public virtual decimal QuoteWhenIntendingToBuy(decimal quantityToBuy)
+        {
+            return quantityToBuy / Rate;
+        }
+
         public override string ToString()
         {
             return string.Format("{0}: {2:n4}", SellBuyCurrencyPair, Rate);

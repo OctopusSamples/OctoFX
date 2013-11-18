@@ -13,6 +13,9 @@
         <!-- Fixed navbar -->
     <div class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
+        <div class="row">
+          <div class="span12">
+            
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -31,11 +34,13 @@
             }
             else
             {
-              <li><a href="@Url.Action("Login", "Account")">Get quote</a></li>              
+              <li><a href="@Url.Action("Quote", "Deal")">Get quote</a></li>              
               <li><a href="@Url.Action("Login", "Account")">My deals</a></li>              
             }
           </ul>
         </div><!--/.nav-collapse -->
+          </div>
+        </div>
       </div>
     </div>
 

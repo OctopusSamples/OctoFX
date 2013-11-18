@@ -1,0 +1,54 @@
+﻿@using OctoFX.Core.Model
+@model OctoFX.TradingWebsite.Models.QuoteModel
+
+@{
+  ViewBag.Title = "Get a quote";
+}
+
+<hgroup class="title">
+  <h1>@ViewBag.Title</h1>
+</hgroup>
+
+@using (Html.BeginForm())
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary()
+
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Spot quote</h3>
+    </div>
+    <div class="panel-body">
+      <div class="form-horizontal">
+
+        <div class="form-group">
+          @Html.LabelFor(m => m.SellCurrency, "I have (sell):", new { @class = "col-sm-2 control-label" })
+          <div class="col-sm-2">
+            @Html.DropDownListFor(m => m.SellCurrency, OctoFX.Core.Model.Currency.AllSupportedCurrencies.Select(a => new SelectListItem() { Selected = a == Model.SellCurrency, Text = a.IsoCurrencyCode, Value = a.IsoCurrencyCode }), new { @class = "form-control" })
+          </div>
+          <div class="col-sm-4">
+            @Html.TextBoxFor(m => m.QuantityToSell, new { @class = "form-control", placeholder = "1,300.00" })
+            @Html.ValidationMessageFor(m => m.QuantityToSell)
+            @Html.ValidationMessageFor(m => m.SellCurrency)
+          </div>
+        </div>
+        
+        <div class="form-group">
+          @Html.LabelFor(m => m.BuyCurrency, "I want (buy):", new { @class = "col-sm-2 control-label" })
+          <div class="col-sm-2">
+            @Html.DropDownListFor(m => m.BuyCurrency, OctoFX.Core.Model.Currency.AllSupportedCurrencies.Select(a => new SelectListItem() { Selected = a == Model.BuyCurrency, Text = a.IsoCurrencyCode, Value = a.IsoCurrencyCode }), new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.BuyCurrency)
+          </div>
+        </div>
+
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" class="btn btn-primary" value="Get quote" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+}

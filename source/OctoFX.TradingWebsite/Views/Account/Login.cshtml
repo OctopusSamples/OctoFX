@@ -1,45 +1,47 @@
 ﻿@model OctoFX.TradingWebsite.Models.LoginModel
 
 @{
-    ViewBag.Title = "Sign in";
+  ViewBag.Title = "Sign in";
 }
 
-@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true)
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl }))
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary(true)
 
-<div class="panel panel-default">
-            <div class="panel-heading">
-              <h3 class="panel-title">Sign in</h3>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Sign in</h3>
+    </div>
+    <div class="panel-body">
+      <div class="form-horizontal">
+        <div class="form-group">
+          @Html.LabelFor(m => m.Email, new { @class = "col-sm-2 control-label" })
+          <div class="col-sm-4">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Email)
+          </div>
+        </div>
+
+        <div class="form-group">
+          @Html.LabelFor(m => m.Password, new { @class = "col-sm-2 control-label" })
+          <div class="col-sm-4">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Password)
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="RememberMe">
+                Remember me
+              </label>
             </div>
-  <div class="panel-body">
-      <div class="form-horizontal">    
-    <div class="form-group">
-      @Html.LabelFor(m => m.UserName, new { @class="col-sm-2 control-label" })
-      <div class="col-sm-4">
-        @Html.TextBoxFor(m => m.UserName, new { @class="form-control"})
-        @Html.ValidationMessageFor(m => m.UserName)      
-      </div>
-    </div>
-    
-    <div class="form-group">
-      @Html.LabelFor(m => m.Password, new { @class="col-sm-2 control-label" })
-      <div class="col-sm-4">
-        @Html.PasswordFor(m => m.Password, new { @class="form-control"})
-        @Html.ValidationMessageFor(m => m.Password) 
-      </div>
-    </div>
-    
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" name="RememberMe"> Remember me
-        </label>
-      </div>
-      </div>
-    </div>
-    
+          </div>
+        </div>
+
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
             <input type="submit" class="btn btn-primary" value="Sign in" />
@@ -47,16 +49,16 @@
         </div>
         <div class="form-group">
           <div class="col-sm-offset-2 col-sm-10">
-              <p>
-        @Html.ActionLink("Register", "Register") if you don't have an account.
-    </p>
+            <p>
+              @Html.ActionLink("Register", "Register") if you don't have an account.
+            </p>
           </div>
 
         </div>
-    
-  </div>
 
+      </div>
+
+    </div>
   </div>
-          </div>
   
 }

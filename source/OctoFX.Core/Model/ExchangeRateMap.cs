@@ -6,7 +6,7 @@ namespace OctoFX.Core.Model
     {
         public ExchangeRateMap()
         {
-            Id(m => m.SellBuyCurrencyPair).CustomType<CurrencyPair>();
+            Id(m => m.SellBuyCurrencyPair).GeneratedBy.Assigned().CustomType<CurrencyPairUserType>().Column("SellBuyCurrencyPair");
             Map(m => m.Rate);
         }
     }

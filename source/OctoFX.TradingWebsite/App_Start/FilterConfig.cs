@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using OctoFX.TradingWebsite.Filters;
 
 namespace OctoFX.TradingWebsite
 {
@@ -8,6 +9,7 @@ namespace OctoFX.TradingWebsite
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+            filters.Add(new UnitOfWorkFilter());
         }
     }
 }

@@ -52,10 +52,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="TestStack.BDDfy">
+      <HintPath>..\packages\TestStack.BDDfy.3.17.1\lib\NET40\TestStack.BDDfy.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="OctoFX.Core\Model\CurrencyPairTests.cs" />
     <Compile Include="OctoFX.Core\Model\CurrencyTests.cs" />
+    <Compile Include="OctoFX.Core\Model\ExchangeRateStories.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -20,6 +20,18 @@ create table dbo.[BeneficiaryAccount]
 )
 go
 
+create table dbo.[Quote]
+(
+	Id int identity(1,1) not null constraint PK_Quote_Id primary key clustered,
+	SellBuyCurrencyPair varchar(7) not null,
+	Rate decimal(20,9) not null,
+	SellAmount decimal(20,9) not null,
+	BuyAmount decimal(20,9) not null,
+	QuotedDate datetimeoffset not null,
+	ExpiryDate datetimeoffset not null
+)
+go
+
 create table dbo.[ExchangeRate]
 (
 	SellBuyCurrencyPair varchar(7) not null constraint PK_ExchangeRate_Id primary key clustered,

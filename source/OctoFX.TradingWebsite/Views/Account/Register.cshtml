@@ -1,37 +1,63 @@
 ﻿@model OctoFX.TradingWebsite.Models.RegisterModel
 @{
-    ViewBag.Title = "Register";
+  ViewBag.Title = "Welcome!";
 }
 
 <hgroup class="title">
-    <h1>@ViewBag.Title.</h1>
-    <h2>Create a new account.</h2>
+  <h1>@ViewBag.Title</h1>
+  <h2>We'll have you trading in minutes</h2>
 </hgroup>
 
-@using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary()
+@using (Html.BeginForm())
+{
+  @Html.AntiForgeryToken()
+  @Html.ValidationSummary()
 
-    <fieldset>
-        <legend>Registration Form</legend>
-        <ol>
-            <li>
-                @Html.LabelFor(m => m.UserName)
-                @Html.TextBoxFor(m => m.UserName)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.Password)
-                @Html.PasswordFor(m => m.Password)
-            </li>
-            <li>
-                @Html.LabelFor(m => m.ConfirmPassword)
-                @Html.PasswordFor(m => m.ConfirmPassword)
-            </li>
-        </ol>
-        <input type="submit" value="Register" />
-    </fieldset>
-}
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Register</h3>
+    </div>
+    <div class="panel-body">
+      <div class="form-horizontal">
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+        <div class="form-group">
+          @Html.LabelFor(m => m.Name, new { @class = "col-sm-2 control-label" })
+          <div class="col-sm-4">
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Name)
+          </div>
+        </div>
+
+        <div class="form-group">
+          @Html.LabelFor(m => m.Email, new { @class = "col-sm-2 control-label" })
+          <div class="col-sm-4">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Email)
+          </div>
+        </div>
+
+        <div class="form-group">
+          @Html.LabelFor(m => m.Password, new { @class = "col-sm-2 control-label" })
+          <div class="col-sm-4">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.Password)
+          </div>
+        </div>
+
+        <div class="form-group">
+          @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-sm-2 control-label" })
+          <div class="col-sm-4">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+            @Html.ValidationMessageFor(m => m.ConfirmPassword)
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-2 col-sm-10">
+            <input type="submit" class="btn btn-primary" value="Register" />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
 }
