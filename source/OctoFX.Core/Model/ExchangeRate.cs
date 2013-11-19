@@ -34,7 +34,7 @@
         }
 
         public virtual CurrencyPair SellBuyCurrencyPair { get; protected set; }
-        public virtual decimal Rate { get; protected set; }
+        public virtual decimal Rate { get; set; }
 
         public virtual decimal QuoteWhenIntendingToSell(decimal quantityToSell)
         {

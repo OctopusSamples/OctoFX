@@ -1,14 +1,24 @@
 ﻿using System.Web.Mvc;
+using NHibernate;
+using OctoFX.Core.Model;
 
 namespace OctoFX.TradingWebsite.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ISession session;
+
+        public HomeController(ISession session)
+        {
+            this.session = session;
+        }
+
         public ActionResult Index()
         {
-            ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";
+            var rates = session.QueryOver<ExchangeRate>()
+                .List();
 
-            return View();
+            return View(rates);
         }
 
         public ActionResult About()

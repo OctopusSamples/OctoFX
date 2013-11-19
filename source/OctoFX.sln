@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.SampleDataGenerator", "OctoFX.SampleDataGenerator\OctoFX.SampleDataGenerator.csproj", "{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.RateService", "OctoFX.RateService\OctoFX.RateService.csproj", "{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<OctoFX.Core.Model.ExchangeRate>
+@{
     ViewBag.Title = "Home";
 }
 
@@ -6,3 +7,30 @@
 <p>
   OctoFX makes it easy to buy and sell foreign currency. 
 </p>
+
+<h3>Check out our great rates!</h3>
+
+<p>
+  <a class="btn btn-success" href="@Url.Action("Quote", "Deal")">Get a quote</a>
+</p>
+
+<table class="table table-bordered" style="width: 300px">
+  <thead>
+    <tr>
+      <th>I have (sell)</th>
+      <th>I want (buy)</th>
+      <th>Rate</th>
+    </tr>
+  </thead>
+  
+  <tbody>
+    @foreach (var rate in Model)
+    {
+      <tr>
+        <td>@rate.SellBuyCurrencyPair.Sell</td>
+        <td>@rate.SellBuyCurrencyPair.Buy</td>
+        <td>@rate.Rate.ToString("n4")</td>
+      </tr>
+    }
+  </tbody>
+</table>
