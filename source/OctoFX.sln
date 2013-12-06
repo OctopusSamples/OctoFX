@@ -22,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4DAB90
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.SmokeTests", "OctoFX.SmokeTests\OctoFX.SmokeTests.csproj", "{956665C5-C1CF-45C0-809C-84E214DFFCB3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -52,6 +54,10 @@ Global
 		{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{956665C5-C1CF-45C0-809C-84E214DFFCB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{956665C5-C1CF-45C0-809C-84E214DFFCB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{956665C5-C1CF-45C0-809C-84E214DFFCB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{956665C5-C1CF-45C0-809C-84E214DFFCB3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

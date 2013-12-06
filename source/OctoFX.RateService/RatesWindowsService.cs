@@ -1,29 +1,42 @@
-﻿using System;
-using System.Diagnostics;
-using System.Timers;
-using NHibernate;
+﻿using NHibernate;
 using OctoFX.Core.Model;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Linq;
+using System.ServiceProcess;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
 
 namespace OctoFX.RateService
 {
-    public class RateService
+    partial class RatesWindowsService : ServiceBase
     {
         readonly ISessionFactory sessionFactory;
-        private readonly IMarketExchangeRateProvider rateProvider;
+        readonly IMarketExchangeRateProvider rateProvider;
         readonly Timer timer;
 
-        public RateService(ISessionFactory sessionFactory, IMarketExchangeRateProvider rateProvider)
+        public RatesWindowsService(ISessionFactory sessionFactory, IMarketExchangeRateProvider rateProvider)
         {
+            InitializeComponent();
+
             this.sessionFactory = sessionFactory;
             this.rateProvider = rateProvider;
             timer = new Timer(5000) { AutoReset = true };
             timer.Elapsed += (sender, eventArgs) => GenerateNewRates();
         }
 
-        public bool Start()
+        protected override void OnStart(string[] args)
         {
             timer.Start();
-            return true;
+        }
+
+        protected override void OnStop()
+        {
+            timer.Stop();
         }
 
         void GenerateNewRates()
@@ -51,12 +64,6 @@ namespace OctoFX.RateService
             {
                 Trace.WriteLine(ex.ToString());
             }
-        }
-
-        public bool Stop()
-        {
-            timer.Stop();
-            return true;
         }
     }
 }
