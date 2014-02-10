@@ -1,0 +1,1 @@
+﻿& .\OctoFX.Database.exe
