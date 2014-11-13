@@ -1,6 +1,6 @@
 OctoFX is a sample application, built to demonstrate how a multi-tier application can be deployed using Octopus Deploy. 
 
-## Domain overview!
+## Domain overview
 
 OctoFX Ltd is a fictitious London-based online foreign exchange company. Retail customers and businesses can register an account with OctoFX, and use the platform to trade currencies. 
 
