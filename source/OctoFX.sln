@@ -1,6 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{96E3A881-064C-463F-8F9F-69CF10C4F0A9}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.TradingWebsite", "OctoFX.TradingWebsite\OctoFX.TradingWebsite.csproj", "{41EBA3AE-66CE-4080-9457-626DCE0C5463}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.Database", "OctoFX.Database\OctoFX.Database.csproj", "{CDBECF97-8D93-4875-8258-CC41CF679C87}"
@@ -9,18 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.Core", "OctoFX.Core\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.Tests", "OctoFX.Tests\OctoFX.Tests.csproj", "{6E77B735-90F7-41BE-B764-F5ACC39843C9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{96E3A881-064C-463F-8F9F-69CF10C4F0A9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.SampleDataGenerator", "OctoFX.SampleDataGenerator\OctoFX.SampleDataGenerator.csproj", "{19FDE2FD-5C49-4054-AD17-7E4CA45975C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.RateService", "OctoFX.RateService\OctoFX.RateService.csproj", "{7859AEAF-C64F-4D2E-AEF0-6664323D3FAE}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{4DAB9076-B3BF-45B8-8449-A26BCB2A4C72}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OctoFX.SmokeTests", "OctoFX.SmokeTests\OctoFX.SmokeTests.csproj", "{956665C5-C1CF-45C0-809C-84E214DFFCB3}"
 EndProject
