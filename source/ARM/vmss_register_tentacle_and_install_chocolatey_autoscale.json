@@ -1,0 +1,331 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "adminUsername": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "The name of the administrator of the new VM. Exclusion list: 'admin','administrator'"
+            }
+        },
+        "adminPassword": {
+            "defaultValue": "",
+            "type": "securestring",
+            "metadata": {
+              "description": "The password for the administrator account of the new VM"
+            }
+        },
+        "virtualMachineScaleSetsName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "The name of the VM scale set"
+            }
+        },
+        "virtualNetworkName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "VNET Name"
+            }
+        },
+        "rdpIpAddress": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "IP address of your machine to access via RDP"
+            }
+        },
+        "networkSecurityGroupName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Network Security Group Name"
+            }
+        },
+        "virtualNetworkResourceGroup": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Resource Group VNET is deployed in"
+            }
+        },
+        "subnetName": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Name of the subnet inside the VNET"
+            }
+        },
+        "octopusServerUrl": {
+            "defaultValue": "https://your-octopus-url/",
+            "type": "string",
+            "metadata": {
+                "description": "Octopus Server url"
+            }
+        },
+        "octopusServerThumbprint": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Octopus Server thumbprint"
+            }
+        },
+        "octopusApiKey": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Octopus Api Key"
+            }
+        },
+        "octopusRoles": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Octopus roles"
+            }
+        },
+        "octopusEnvs": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Octopus Environments"
+            }
+        },
+        "chocolateyApps": {
+            "defaultValue": "",
+            "type": "string",
+            "metadata": {
+                "description": "Chocolatey apps to install"
+            }
+        }
+    },
+    "variables": {
+        "computerNamePrefix": "[concat(parameters('virtualMachineScaleSetsName'),'i')]",
+        "nicName": "[concat(parameters('virtualMachineScaleSetsName'), 'Nic')]", 
+        "nicIpConfigName": "[concat(parameters('virtualMachineScaleSetsName'), 'IpConfig')]",
+        "vnetID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
+        "subnetID": "[concat(variables('vnetID'),'/subnets/', parameters('subnetName'))]",
+        "networkSecurityGroupID": "[resourceId(parameters('virtualNetworkResourceGroup'), 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+    },
+    "resources": [
+    {
+        "apiVersion": "2015-06-15",
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "[parameters('networkSecurityGroupName')]",
+        "location": "[resourceGroup().location]",
+        "properties": {
+            "securityRules": [
+            {
+                "name": "default-allow-rdp",
+                "properties": {
+                "description": "Allow RDP",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "[parameters('rdpIpAddress')]",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound"
+                }
+            },
+            {
+                "name": "default-allow-Octopus",
+                "properties": {
+                "description": "Allow Octopus",
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "10933",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1001,
+                "direction": "Inbound"
+                }
+            }                 
+            ]
+        }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "apiVersion": "2019-03-01",
+            "name": "[parameters('virtualMachineScaleSetsName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Standard_B2s",
+                "tier": "Standard",
+                "capacity": 1
+            },
+            "properties": {
+                "singlePlacementGroup": true,
+                "upgradePolicy": {
+                    "mode": "Manual"
+                },
+                "virtualMachineProfile": {
+                    "osProfile": {
+                        "computerNamePrefix": "[variables('computerNamePrefix')]",
+                        "adminUsername": "[parameters('adminUsername')]",
+                        "adminPassword": "[parameters('adminPassword')]",
+                        "windowsConfiguration": {
+                            "provisionVMAgent": true,
+                            "enableAutomaticUpdates": true
+                        },
+                        "secrets": []
+                    },
+                    "storageProfile": {
+                        "osDisk": {
+                            "createOption": "FromImage",
+                            "caching": "ReadWrite",
+                            "managedDisk": {
+                                "storageAccountType": "Standard_LRS"
+                            }
+                        },
+                        "imageReference": {
+                            "publisher": "MicrosoftWindowsServer",
+                            "offer": "WindowsServer",
+                            "sku": "2016-Datacenter",
+                            "version": "latest"
+                        }
+                    },
+                    "networkProfile": {
+                        "networkInterfaceConfigurations": [
+                            {
+                                "name": "[variables('nicName')]",
+                                "properties": {
+                                    "primary": true,
+                                    "enableAcceleratedNetworking": false,
+                                    "networkSecurityGroup": {
+                                        "id": "[variables('networkSecurityGroupID')]"
+                                    },
+                                    "dnsSettings": {
+                                        "dnsServers": []
+                                    },
+                                    "enableIPForwarding": false,
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "[variables('nicIpConfigName')]",
+                                            "properties": {
+                                                "publicIPAddressConfiguration": {
+                                                    "name": "pub1",
+                                                    "properties": {
+                                                        "idleTimeoutInMinutes": 15,
+                                                        "ipTags": []
+                                                    }
+                                                },
+                                                "subnet": {
+                                                    "id": "[variables('subnetID')]"
+                                                },
+                                                "privateIPAddressVersion": "IPv4"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "extensionProfile": {
+                        "extensions": [
+                            {
+                              "name": "customScript",
+                              "properties": {
+                                "publisher": "Microsoft.Compute",
+                                "settings": {
+                                  "fileUris": [
+                                    "https://raw.githubusercontent.com/OctopusDeploy/team-bas/master/DemoInfrastructure/BootStrapScripts/RegisterListeningTentacleAndRunChoco.ps1"
+                                  ]
+                                },
+                                "typeHandlerVersion": "1.8",
+                                "autoUpgradeMinorVersion": true,
+                                "protectedSettings": {
+                                    "commandToExecute": "[concat('powershell -ExecutionPolicy Unrestricted -file RegisterListeningTentacleAndRunChoco.ps1', ' ', parameters('octopusServerUrl'), ' ', parameters('octopusServerThumbprint'), ' ', parameters('octopusApiKey'), ' ', parameters('octopusRoles'), ' ', parameters('octopusEnvs'), ' ', parameters('chocolateyApps'))]"
+                                },
+                                "type": "CustomScriptExtension"
+                              }
+                            }
+                          ]
+                    },
+                    "priority": "Regular"
+                },
+                "overprovision": true,
+                "doNotRunExtensionsOnOverprovisionedVMs": false,
+                "platformFaultDomainCount": 5
+            }
+        },{
+            "type": "Microsoft.Insights/autoscaleSettings",
+            "apiVersion": "2015-04-01",
+            "name": "cpuautoscale",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+              "[concat('Microsoft.Compute/virtualMachineScaleSets/',parameters('virtualMachineScaleSetsName'))]"
+            ],
+            "properties": {
+              "name": "cpuautoscale",
+              "targetResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/',parameters('virtualMachineScaleSetsName'))]",
+              "enabled": true,
+              "profiles": [
+                {
+                  "name": "Profile1",
+                  "capacity": {
+                    "minimum": "1",
+                    "maximum": "3",
+                    "default": "1"
+                  },
+                  "rules": [
+                    {
+                      "metricTrigger": {
+                        "metricName": "Percentage CPU",
+                        "metricNamespace": "",
+                        "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/',parameters('virtualMachineScaleSetsName'))]",
+                        "timeGrain": "PT1M",
+                        "statistic": "Average",
+                        "timeWindow": "PT1M",
+                        "timeAggregation": "Average",
+                        "operator": "GreaterThan",
+                        "threshold": 50
+                      },
+                      "scaleAction": {
+                        "direction": "Increase",
+                        "type": "ChangeCount",
+                        "value": "1",
+                        "cooldown": "PT5M"
+                      }
+                    },
+                    {
+                      "metricTrigger": {
+                        "metricName": "Percentage CPU",
+                        "metricNamespace": "",
+                        "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/',parameters('virtualMachineScaleSetsName'))]",
+                        "timeGrain": "PT1M",
+                        "statistic": "Average",
+                        "timeWindow": "PT1M",
+                        "timeAggregation": "Average",
+                        "operator": "LessThan",
+                        "threshold": 30
+                      },
+                      "scaleAction": {
+                        "direction": "Decrease",
+                        "type": "ChangeCount",
+                        "value": "1",
+                        "cooldown": "PT5M"
+                      }
+                    }
+                  ]
+                }
+              ],
+              "notifications": [
+                {
+                  "operation": "Scale",
+                  "email": {
+                    "sendToSubscriptionAdministrator": false,
+                    "sendToSubscriptionCoAdministrators": false,
+                    "customEmails": []
+                  },
+                  "webhooks": []
+                }
+              ]
+            }
+          }
+    ]
+}
