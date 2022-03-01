@@ -10,7 +10,7 @@ step "Calculate Deployment Mode" {
             Octopus.Action.Template.Id = "ActionTemplates-347"
             Octopus.Action.Template.Version = "137"
         }
-        worker_pool_variable = ""
+        worker_pool = "Default Worker Pool"
     }
 }
 
@@ -68,6 +68,7 @@ step "Deploy OctoFX Database" {
             Octopus.Action.Package.DownloadOnTentacle = "False"
             Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
             Octopus.Action.Package.PackageId = "OctoFX.Database"
+            Octopus.Action.RunOnServer = "false"
         }
         worker_pool_variable = ""
 
@@ -103,6 +104,7 @@ step "Deploy OctoFX Windows Service" {
             Octopus.Action.Package.DownloadOnTentacle = "False"
             Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
             Octopus.Action.Package.PackageId = "OctoFX.RateService"
+            Octopus.Action.RunOnServer = "false"
             Octopus.Action.WindowsService.CreateOrUpdateService = "True"
             Octopus.Action.WindowsService.DesiredStatus = "Default"
             Octopus.Action.WindowsService.DisplayName = "OctoFX Rate Service for #{Octopus.Environment.Name}"
@@ -158,6 +160,7 @@ step "Deploy OctoFX Website" {
             Octopus.Action.Package.DownloadOnTentacle = "False"
             Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
             Octopus.Action.Package.PackageId = "OctoFX.TradingWebsite"
+            Octopus.Action.RunOnServer = "false"
         }
         worker_pool_variable = ""
 
@@ -192,7 +195,7 @@ step "Block Release Progression" {
             Octopus.Action.Template.Id = "ActionTemplates-361"
             Octopus.Action.Template.Version = "1"
         }
-        worker_pool_variable = ""
+        worker_pool = "Default Worker Pool"
     }
 }
 
@@ -214,6 +217,7 @@ step "Verify Application" {
             Octopus.Action.Manual.BlockConcurrentDeployments = "False"
             Octopus.Action.Manual.Instructions = "Please log on to www.#{Application.Website.Name}.com and verify the application is running correctly."
             Octopus.Action.Manual.ResponsibleTeamIds = "Octopus Administrators,Octopus Managers"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
@@ -241,6 +245,7 @@ step "Notify Stakeholders" {
             Octopus.Action.Email.IsHtml = "False"
             Octopus.Action.Email.Subject = "#{Octopus.Project.Name} deployment to #{Octopus.Environment.Name} #{If Octopus.Deployment.Error}failed#{else}completed successfully#{/if}"
             Octopus.Action.Email.ToTeamIds = "Octopus Managers"
+            Octopus.Action.RunOnServer = "false"
         }
     }
 }
