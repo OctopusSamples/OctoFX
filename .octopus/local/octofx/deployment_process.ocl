@@ -1,0 +1,246 @@
+step "Calculate Deployment Mode" {
+
+    action {
+        notes = <<-EOT
+                **Always Runs**
+                
+                Step to determine if we are deploying, redeploying, or rolling back.
+            EOT
+        properties = {
+            Octopus.Action.Template.Id = "ActionTemplates-347"
+            Octopus.Action.Template.Version = "137"
+        }
+        worker_pool_variable = ""
+    }
+}
+
+step "Run Database Creation Runbook" {
+    condition = "Variable"
+    properties = {
+        Octopus.Step.ConditionVariableExpression = "#{unless Octopus.Deployment.Error}#{Octopus.Action[Calculate Deployment Mode].Output.RunOnDeploy}#{/unless}"
+    }
+
+    action {
+        notes = <<-EOT
+                **Runs on Deployments only**
+                
+                Runs the `Create OctoFx Database If Not Exists` runbook to ensure the database is there and ready for deployments.
+            EOT
+        properties = {
+            Octopus.Action.Template.Id = "ActionTemplates-346"
+            Octopus.Action.Template.Version = "13"
+            Run.Runbook.Api.Key = "#{DeployProcess.Api.Key}"
+            Run.Runbook.AutoApproveManualInterventions = "No"
+            Run.Runbook.Base.Url = "#{Octopus.Web.ServerUri}"
+            Run.Runbook.CancelInSeconds = "1800"
+            Run.Runbook.DateTime = "N/A"
+            Run.Runbook.Environment.Name = "#{Octopus.Environment.Name}"
+            Run.Runbook.Machines = "N/A"
+            Run.Runbook.ManualIntervention.EnvironmentToUse = "#{Octopus.Environment.Name}"
+            Run.Runbook.Name = "Create OctoFx Database If Not Exists"
+            Run.Runbook.Project.Name = "#{Octopus.Project.Name}"
+            Run.Runbook.Space.Name = "#{Octopus.Space.Name}"
+            Run.Runbook.UsePublishedSnapShot = "True"
+            Run.Runbook.Waitforfinish = "True"
+        }
+        worker_pool = "Default Worker Pool"
+    }
+}
+
+step "Deploy OctoFX Database" {
+    condition = "Variable"
+    properties = {
+        Octopus.Action.TargetRoles = "octofx-web"
+        Octopus.Step.ConditionVariableExpression = "#{unless Octopus.Deployment.Error}#{Octopus.Action[Calculate Deployment Mode].Output.RunOnDeploy}#{/unless}"
+    }
+
+    action {
+        action_type = "Octopus.TentaclePackage"
+        notes = <<-EOT
+                **Runs on Deployments only**
+                
+                Deploys the changes to the OctoFX database.
+            EOT
+        properties = {
+            Octopus.Action.EnabledFeatures = ",Octopus.Features.ConfigurationTransforms,Octopus.Features.ConfigurationVariables"
+            Octopus.Action.Package.AutomaticallyRunConfigurationTransformationFiles = "True"
+            Octopus.Action.Package.AutomaticallyUpdateAppSettingsAndConnectionStrings = "True"
+            Octopus.Action.Package.DownloadOnTentacle = "False"
+            Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
+            Octopus.Action.Package.PackageId = "OctoFX.Database"
+        }
+        worker_pool_variable = ""
+
+        packages {
+            acquisition_location = "Server"
+            feed = "Octopus Server (built-in)"
+            package_id = "OctoFX.Database"
+            properties = {
+                SelectionMode = "immediate"
+            }
+        }
+    }
+}
+
+step "Deploy OctoFX Windows Service" {
+    condition = "Variable"
+    properties = {
+        Octopus.Action.TargetRoles = "octofx-service"
+        Octopus.Step.ConditionVariableExpression = "#{unless Octopus.Deployment.Error}#{Octopus.Action[Calculate Deployment Mode].Output.RunOnDeployOrRollback}#{/unless}"
+    }
+
+    action {
+        action_type = "Octopus.WindowsService"
+        notes = <<-EOT
+                **Runs on Deployments and Rollbacks**
+                
+                Deploys the OctoFX Rate Service to the app server.
+            EOT
+        properties = {
+            Octopus.Action.EnabledFeatures = ",Octopus.Features.WindowsService,Octopus.Features.ConfigurationTransforms,Octopus.Features.ConfigurationVariables"
+            Octopus.Action.Package.AutomaticallyRunConfigurationTransformationFiles = "True"
+            Octopus.Action.Package.AutomaticallyUpdateAppSettingsAndConnectionStrings = "True"
+            Octopus.Action.Package.DownloadOnTentacle = "False"
+            Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
+            Octopus.Action.Package.PackageId = "OctoFX.RateService"
+            Octopus.Action.WindowsService.CreateOrUpdateService = "True"
+            Octopus.Action.WindowsService.DesiredStatus = "Default"
+            Octopus.Action.WindowsService.DisplayName = "OctoFX Rate Service for #{Octopus.Environment.Name}"
+            Octopus.Action.WindowsService.ExecutablePath = "OctoFX.RateService.exe"
+            Octopus.Action.WindowsService.ServiceAccount = "LocalSystem"
+            Octopus.Action.WindowsService.ServiceName = "#{Application.Service.Name}"
+            Octopus.Action.WindowsService.StartMode = "auto"
+        }
+        worker_pool_variable = ""
+
+        packages {
+            acquisition_location = "Server"
+            feed = "Octopus Server (built-in)"
+            package_id = "OctoFX.RateService"
+            properties = {
+                SelectionMode = "immediate"
+            }
+        }
+    }
+}
+
+step "Deploy OctoFX Website" {
+    properties = {
+        Octopus.Action.TargetRoles = "octofx-web"
+    }
+
+    action {
+        action_type = "Octopus.IIS"
+        notes = <<-EOT
+                **Runs on Deployments, Rollbacks, and Redeployments**
+                
+                Deploy the OctoFX website to the web server.
+            EOT
+        properties = {
+            Octopus.Action.EnabledFeatures = ",Octopus.Features.IISWebSite,Octopus.Features.ConfigurationTransforms,Octopus.Features.ConfigurationVariables"
+            Octopus.Action.IISWebSite.ApplicationPoolFrameworkVersion = "v4.0"
+            Octopus.Action.IISWebSite.ApplicationPoolIdentityType = "ApplicationPoolIdentity"
+            Octopus.Action.IISWebSite.ApplicationPoolName = "#{Application.Website.Name}"
+            Octopus.Action.IISWebSite.Bindings = "[{\"protocol\":\"http\",\"port\":\"80\",\"host\":\"www.#{Application.Website.Name}.com\",\"thumbprint\":null,\"certificateVariable\":null,\"requireSni\":\"False\",\"enabled\":\"True\"}]"
+            Octopus.Action.IISWebSite.CreateOrUpdateWebSite = "True"
+            Octopus.Action.IISWebSite.DeploymentType = "webSite"
+            Octopus.Action.IISWebSite.EnableAnonymousAuthentication = "True"
+            Octopus.Action.IISWebSite.EnableBasicAuthentication = "False"
+            Octopus.Action.IISWebSite.EnableWindowsAuthentication = "False"
+            Octopus.Action.IISWebSite.StartApplicationPool = "True"
+            Octopus.Action.IISWebSite.StartWebSite = "True"
+            Octopus.Action.IISWebSite.WebApplication.ApplicationPoolFrameworkVersion = "v4.0"
+            Octopus.Action.IISWebSite.WebApplication.ApplicationPoolIdentityType = "ApplicationPoolIdentity"
+            Octopus.Action.IISWebSite.WebRootType = "packageRoot"
+            Octopus.Action.IISWebSite.WebSiteName = "#{Application.Website.Name}"
+            Octopus.Action.Package.AutomaticallyRunConfigurationTransformationFiles = "True"
+            Octopus.Action.Package.AutomaticallyUpdateAppSettingsAndConnectionStrings = "True"
+            Octopus.Action.Package.DownloadOnTentacle = "False"
+            Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
+            Octopus.Action.Package.PackageId = "OctoFX.TradingWebsite"
+        }
+        worker_pool_variable = ""
+
+        packages {
+            acquisition_location = "Server"
+            feed = "Octopus Server (built-in)"
+            package_id = "OctoFX.TradingWebsite"
+            properties = {
+                SelectionMode = "immediate"
+            }
+        }
+    }
+}
+
+step "Block Release Progression" {
+    condition = "Variable"
+    properties = {
+        Octopus.Step.ConditionVariableExpression = "#{unless Octopus.Deployment.Error}#{Octopus.Action[Calculate Deployment Mode].Output.RunOnRollback}#{/unless}"
+    }
+
+    action {
+        notes = <<-EOT
+                **Runs on Rollbacks only**
+                
+                Blocks the progression on the rolled back release so it cannot be deployed to other environments.
+            EOT
+        properties = {
+            Block.Octopus.Api.Key = "#{DeployProcess.Api.Key}"
+            Block.Octopus.Previous.Release.Id = "#{Octopus.Release.CurrentForEnvironment.Id}"
+            Block.Octopus.Reason = "Rolled back to #{Octopus.Release.Number}"
+            Block.Octopus.Url = "#{Octopus.Web.BaseUrl}"
+            Octopus.Action.Template.Id = "ActionTemplates-361"
+            Octopus.Action.Template.Version = "1"
+        }
+        worker_pool_variable = ""
+    }
+}
+
+step "Verify Application" {
+    condition = "Variable"
+    properties = {
+        Octopus.Step.ConditionVariableExpression = "#{unless Octopus.Deployment.Error}#{Octopus.Action[Calculate Deployment Mode].Output.RunOnDeployOrRollback}#{/unless}"
+    }
+
+    action {
+        action_type = "Octopus.Manual"
+        environments = ["Test", "Production"]
+        notes = <<-EOT
+                **Runs on Deployments and Rollbacks**
+                
+                Pause the deployment and verify everything is running correctly.
+            EOT
+        properties = {
+            Octopus.Action.Manual.BlockConcurrentDeployments = "False"
+            Octopus.Action.Manual.Instructions = "Please log on to www.#{Application.Website.Name}.com and verify the application is running correctly."
+            Octopus.Action.Manual.ResponsibleTeamIds = "Octopus Administrators,Octopus Managers"
+        }
+    }
+}
+
+step "Notify Stakeholders" {
+    condition = "Always"
+
+    action {
+        action_type = "Octopus.Email"
+        notes = <<-EOT
+                **Always Runs**
+                
+                Send an email to the stakeholders informing them of the result of the deployment.  Will run even if an error occurs.
+            EOT
+        properties = {
+            Octopus.Action.Email.Body = <<-EOT
+                The #{Octopus.Project.Name} deployment to #{Octopus.Environment.Name} #{If Octopus.Deployment.Error}failed#{else}completed successfully#{/if}
+                
+                #{Octopus.Web.ServerUri}/app#/#{Octopus.Space.Id}/tasks/#{Octopus.Task.Id}
+                
+                #{if Octopus.Deployment.Error}
+                #{Octopus.Deployment.Error}
+                #{/if}
+            EOT
+            Octopus.Action.Email.IsHtml = "False"
+            Octopus.Action.Email.Subject = "#{Octopus.Project.Name} deployment to #{Octopus.Environment.Name} #{If Octopus.Deployment.Error}failed#{else}completed successfully#{/if}"
+            Octopus.Action.Email.ToTeamIds = "Octopus Managers"
+        }
+    }
+}
