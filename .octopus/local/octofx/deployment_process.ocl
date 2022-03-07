@@ -4,7 +4,7 @@ step "Calculate Deployment Mode" {
         notes = <<-EOT
                 **Always Runs**
                 
-                Step to determine if we are deploying, redeploying, or rolling back.
+                Step to determine if we are deploying, redeploying or rolling back.
             EOT
         properties = {
             Octopus.Action.Template.Id = "ActionTemplates-347"
