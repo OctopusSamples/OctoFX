@@ -183,7 +183,7 @@ step "Verify Application" {
 
     action {
         action_type = "Octopus.Manual"
-        environments = ["Test", "Production"]
+        environments = ["Production"]
         notes = <<-EOT
                 **Runs on Deployments and Rollbacks**
                 
