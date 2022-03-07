@@ -8,7 +8,7 @@ step "Calculate Deployment Mode" {
             EOT
         properties = {
             Octopus.Action.Template.Id = "ActionTemplates-347"
-            Octopus.Action.Template.Version = "137"
+            Octopus.Action.Template.Version = "138"
         }
         worker_pool = "Default Worker Pool"
     }
