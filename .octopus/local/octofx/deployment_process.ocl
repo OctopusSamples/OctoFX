@@ -50,7 +50,7 @@ step "Run Database Creation Runbook" {
 step "Deploy OctoFX Database" {
     condition = "Variable"
     properties = {
-        Octopus.Action.TargetRoles = "octofx-web"
+        Octopus.Action.TargetRoles = "octofx-database"
         Octopus.Step.ConditionVariableExpression = "#{unless Octopus.Deployment.Error}#{Octopus.Action[Calculate Deployment Mode].Output.RunOnDeploy}#{/unless}"
     }
 
