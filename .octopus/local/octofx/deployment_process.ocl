@@ -175,30 +175,6 @@ step "Deploy OctoFX Website" {
     }
 }
 
-step "Block Release Progression" {
-    condition = "Variable"
-    properties = {
-        Octopus.Step.ConditionVariableExpression = "#{unless Octopus.Deployment.Error}#{Octopus.Action[Calculate Deployment Mode].Output.RunOnRollback}#{/unless}"
-    }
-
-    action {
-        notes = <<-EOT
-                **Runs on Rollbacks only**
-                
-                Blocks the progression on the rolled back release so it cannot be deployed to other environments.
-            EOT
-        properties = {
-            Block.Octopus.Api.Key = "#{DeployProcess.Api.Key}"
-            Block.Octopus.Previous.Release.Id = "#{Octopus.Release.CurrentForEnvironment.Id}"
-            Block.Octopus.Reason = "Rolled back to #{Octopus.Release.Number}"
-            Block.Octopus.Url = "#{Octopus.Web.BaseUrl}"
-            Octopus.Action.Template.Id = "ActionTemplates-361"
-            Octopus.Action.Template.Version = "1"
-        }
-        worker_pool = "Default Worker Pool"
-    }
-}
-
 step "Verify Application" {
     condition = "Variable"
     properties = {
