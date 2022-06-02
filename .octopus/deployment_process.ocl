@@ -1,0 +1,162 @@
+step "Calculate Deployment Mode" {
+
+    action {
+        notes = <<-EOT
+                **Always Runs**
+                
+                Step to determine if we are deploying, redeploying, or rolling back.
+            EOT
+        properties = {
+            Octopus.Action.RunOnServer = "true"
+            Octopus.Action.Template.Id = "ActionTemplates-82"
+            Octopus.Action.Template.Version = "5"
+        }
+        worker_pool_variable = ""
+    }
+}
+
+step "Deploy OctoFX Database" {
+    condition = "Variable"
+    properties = {
+        Octopus.Action.TargetRoles = "octofx-web"
+        Octopus.Step.ConditionVariableExpression = "#{Octopus.Action[Calculate Deployment Mode].Output.RunOnDeploy}"
+    }
+
+    action {
+        action_type = "Octopus.TentaclePackage"
+        notes = <<-EOT
+                **Runs on Deployments only**
+                
+                Deploys the changes to the OctoFX database.
+            EOT
+        properties = {
+            Octopus.Action.EnabledFeatures = ",Octopus.Features.ConfigurationTransforms,Octopus.Features.ConfigurationVariables"
+            Octopus.Action.Package.AutomaticallyRunConfigurationTransformationFiles = "True"
+            Octopus.Action.Package.AutomaticallyUpdateAppSettingsAndConnectionStrings = "True"
+            Octopus.Action.Package.DownloadOnTentacle = "False"
+            Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
+            Octopus.Action.Package.PackageId = "OctoFX.Database"
+        }
+        worker_pool_variable = ""
+
+        packages {
+            acquisition_location = "Server"
+            feed = "Octopus Server (built-in)"
+            package_id = "OctoFX.Database"
+            properties = {
+                SelectionMode = "immediate"
+            }
+        }
+    }
+}
+
+step "Deploy OctoFX Service" {
+    properties = {
+        Octopus.Action.TargetRoles = "octofx-service"
+    }
+
+    action {
+        action_type = "Octopus.TentaclePackage"
+        notes = <<-EOT
+                **Runs on Deployments and Rollbacks**
+                
+                Deploy the OctoFX Service to the app server.
+            EOT
+        properties = {
+            Octopus.Action.EnabledFeatures = ",Octopus.Features.ConfigurationTransforms,Octopus.Features.ConfigurationVariables"
+            Octopus.Action.Package.AutomaticallyRunConfigurationTransformationFiles = "True"
+            Octopus.Action.Package.AutomaticallyUpdateAppSettingsAndConnectionStrings = "True"
+            Octopus.Action.Package.DownloadOnTentacle = "False"
+            Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
+            Octopus.Action.Package.PackageId = "OctoFX.RateService"
+        }
+        worker_pool_variable = ""
+
+        packages {
+            acquisition_location = "Server"
+            feed = "Octopus Server (built-in)"
+            package_id = "OctoFX.RateService"
+            properties = {
+                SelectionMode = "immediate"
+            }
+        }
+    }
+}
+
+step "Deploy OctoFX Website" {
+    properties = {
+        Octopus.Action.TargetRoles = "octofx-web"
+    }
+
+    action {
+        action_type = "Octopus.TentaclePackage"
+        notes = <<-EOT
+                **Runs on Deployments and Rollbacks**
+                
+                Deploy the OctoFX website to the web server.
+            EOT
+        properties = {
+            Octopus.Action.EnabledFeatures = ",Octopus.Features.ConfigurationTransforms,Octopus.Features.ConfigurationVariables"
+            Octopus.Action.Package.AutomaticallyRunConfigurationTransformationFiles = "True"
+            Octopus.Action.Package.AutomaticallyUpdateAppSettingsAndConnectionStrings = "True"
+            Octopus.Action.Package.DownloadOnTentacle = "False"
+            Octopus.Action.Package.FeedId = "Octopus Server (built-in)"
+            Octopus.Action.Package.PackageId = "OctoFX.TradingWebsite"
+        }
+        worker_pool_variable = ""
+
+        packages {
+            acquisition_location = "Server"
+            feed = "Octopus Server (built-in)"
+            package_id = "OctoFX.TradingWebsite"
+            properties = {
+                SelectionMode = "immediate"
+            }
+        }
+    }
+}
+
+step "Verify Application" {
+
+    action {
+        action_type = "Octopus.Manual"
+        environments = ["Test", "Production"]
+        notes = <<-EOT
+                **Runs on Deployments and Rollbacks**
+                
+                Pause the deployment and verify everything is running correctly.
+            EOT
+        properties = {
+            Octopus.Action.Manual.BlockConcurrentDeployments = "False"
+            Octopus.Action.Manual.Instructions = "Please log on to www.#{Application.Website.Name}.com and verify the application is running correctly."
+            Octopus.Action.Manual.ResponsibleTeamIds = "Everyone"
+        }
+    }
+}
+
+step "Notify Stakeholders" {
+    condition = "Always"
+
+    action {
+        action_type = "Octopus.Email"
+        notes = <<-EOT
+                **Always Runs**
+                
+                Send an email to the stakeholders informing them of the result of the deployment.
+            EOT
+        properties = {
+            Octopus.Action.Email.Body = <<-EOT
+                The #{Octopus.Project.Name} deployment to #{Octopus.Environment.Name} #{If Octopus.Deployment.Error}failed#{else}completed successfully#{/if}
+                
+                #{Octopus.Web.ServerUri}/app#/#{Octopus.Space.Id}/tasks/#{Octopus.Task.Id}
+                
+                #{if Octopus.Deployment.Error}
+                #{Octopus.Deployment.Error}
+                #{/if}
+            EOT
+            Octopus.Action.Email.IsHtml = "False"
+            Octopus.Action.Email.Subject = "#{Octopus.Project.Name} deployment to #{Octopus.Environment.Name} #{If Octopus.Deployment.Error}failed#{else}completed successfully#{/if}"
+            Octopus.Action.Email.ToTeamIds = "Octopus Managers"
+        }
+    }
+}
