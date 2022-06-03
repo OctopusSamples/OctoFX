@@ -1,4 +1,3 @@
-#this is a test to see if this comes up during deployment process
 step "Calculate Deployment Mode" {
 
     action {
