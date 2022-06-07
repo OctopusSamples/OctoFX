@@ -11,7 +11,7 @@ step "Calculate Deployment Mode" {
             Octopus.Action.Template.Id = "ActionTemplates-82"
             Octopus.Action.Template.Version = "5"
         }
-        worker_pool_variable = ""
+        worker_pool = "Hosted Ubuntu"
     }
 }
 
@@ -134,16 +134,12 @@ step "Verify Application" {
     }
 }
 
-step "Notify Stakeholders" {
+step "Notify Lianne & Bob" {
     condition = "Always"
 
     action {
         action_type = "Octopus.Email"
-        notes = <<-EOT
-                **Always Runs**
-                
-                Send an email to the stakeholders informing them of the result of the deployment.
-            EOT
+        notes = "Working on question #3"
         properties = {
             Octopus.Action.Email.Body = <<-EOT
                 The #{Octopus.Project.Name} deployment to #{Octopus.Environment.Name} #{If Octopus.Deployment.Error}failed#{else}completed successfully#{/if}
